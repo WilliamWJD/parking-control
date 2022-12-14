@@ -1,16 +1,17 @@
 package com.api.parkingcontrol.resources;
 
+import com.api.parkingcontrol.domains.ParkingSpot;
 import com.api.parkingcontrol.dto.ParkingSpotDto;
 import com.api.parkingcontrol.services.ParkingSpotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/parking-spot")
@@ -34,5 +35,19 @@ public class ParkingSpotResource {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.save(parkingSpotDto));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ParkingSpot>> findAll(){
+        return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getOneParkingSpot(@PathVariable(value= "id")UUID id){
+        Optional<ParkingSpot> parkingSpot = parkingSpotService.findOneParkingSpot(id);
+        if(!parkingSpot.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking spot not found");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(parkingSpot.get());
     }
 }
