@@ -20,7 +20,21 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     @Transactional
     @Override
     public ParkingSpot save(final ParkingSpotDto parkingSpotDto) {
-        System.out.println(">>>>> AQUI: "+mapper.convertDtoForEntity(parkingSpotDto));
         return parkingSpotRepository.save(mapper.convertDtoForEntity(parkingSpotDto));
+    }
+
+    @Override
+    public boolean existsByLicensePlateCar(String licensePlateCar) {
+        return parkingSpotRepository.existsByLicensePlateCar(licensePlateCar);
+    }
+
+    @Override
+    public boolean existsByParkingSpotNumber(String parkingSpotNumber) {
+        return parkingSpotRepository.existsByParkingSpotNumber(parkingSpotNumber);
+    }
+
+    @Override
+    public boolean existsByApartmentAndBlock(String apartment, String block) {
+        return parkingSpotRepository.existsAllByApartmentAndBlock(apartment, block);
     }
 }
