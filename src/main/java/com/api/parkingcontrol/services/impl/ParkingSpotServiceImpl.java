@@ -5,6 +5,7 @@ import com.api.parkingcontrol.dto.ParkingSpotDto;
 import com.api.parkingcontrol.mappers.ParkingSpotMapper;
 import com.api.parkingcontrol.repositories.ParkingSpotRepository;
 import com.api.parkingcontrol.services.ParkingSpotService;
+import com.api.parkingcontrol.services.exceptions.DataIntegrityViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,18 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     @Transactional
     @Override
     public ParkingSpot save(final ParkingSpotDto parkingSpotDto) {
+        if(existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar())){
+            throw new DataIntegrityViolationException("Conflict: License plate car is already in use");
+        }
+
+        if(existsByParkingSpotNumber(parkingSpotDto.getParkingSpotNumber())){
+            throw new DataIntegrityViolationException("Conflict: parking spot number is already in use");
+        }
+
+        if(existsByApartmentAndBlock(parkingSpotDto.getApartment(), parkingSpotDto.getBlock())){
+            throw new DataIntegrityViolationException("Conflict: Apartment block is in use");
+        }
+
         return parkingSpotRepository.save(mapper.convertDtoForEntity(parkingSpotDto));
     }
 
