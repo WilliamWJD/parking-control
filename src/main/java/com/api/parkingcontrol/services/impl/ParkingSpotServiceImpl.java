@@ -42,21 +42,6 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     }
 
     @Override
-    public boolean existsByLicensePlateCar(String licensePlateCar) {
-        return parkingSpotRepository.existsByLicensePlateCar(licensePlateCar);
-    }
-
-    @Override
-    public boolean existsByParkingSpotNumber(String parkingSpotNumber) {
-        return parkingSpotRepository.existsByParkingSpotNumber(parkingSpotNumber);
-    }
-
-    @Override
-    public boolean existsByApartmentAndBlock(String apartment, String block) {
-        return parkingSpotRepository.existsAllByApartmentAndBlock(apartment, block);
-    }
-
-    @Override
     public Page<ParkingSpot> findAll(Pageable pageable) {
         return parkingSpotRepository.findAll(pageable);
     }
@@ -72,6 +57,7 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
         parkingSpotRepository.deleteById(id);
     }
 
+    @Transactional
     @Override
     public ParkingSpot updateParkingSpot(final UUID id, final ParkingSpotDto parkingSpotDto) {
         ParkingSpot parkingSpot = findOneParkingSpot(id);
@@ -81,5 +67,17 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
         parkingSpotUpdate.setRegistrationDate(parkingSpot.getRegistrationDate());
 
         return parkingSpotRepository.save(parkingSpotUpdate);
+    }
+
+    private boolean existsByLicensePlateCar(String licensePlateCar) {
+        return parkingSpotRepository.existsByLicensePlateCar(licensePlateCar);
+    }
+
+    private boolean existsByParkingSpotNumber(String parkingSpotNumber) {
+        return parkingSpotRepository.existsByParkingSpotNumber(parkingSpotNumber);
+    }
+
+    private boolean existsByApartmentAndBlock(String apartment, String block) {
+        return parkingSpotRepository.existsAllByApartmentAndBlock(apartment, block);
     }
 }

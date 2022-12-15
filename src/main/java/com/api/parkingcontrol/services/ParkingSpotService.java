@@ -9,9 +9,6 @@ import java.util.UUID;
 
 public interface ParkingSpotService {
     ParkingSpot save(final ParkingSpotDto parkingSpot);
-    boolean existsByLicensePlateCar(final String licensePlateCar);
-    boolean existsByParkingSpotNumber(final String parkingSpotNumber);
-    boolean existsByApartmentAndBlock(final String apartment, String block);
     Page<ParkingSpot> findAll(Pageable pageable);
     ParkingSpot findOneParkingSpot(final UUID id);
     void deleteParkingSpot(final UUID id);
