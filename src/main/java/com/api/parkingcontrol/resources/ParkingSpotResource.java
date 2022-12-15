@@ -37,30 +37,17 @@ public class ParkingSpotResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getOneParkingSpot(@PathVariable(value= "id")UUID id){
-        Optional<ParkingSpot> parkingSpot = parkingSpotService.findOneParkingSpot(id);
-        return ResponseEntity.status(HttpStatus.OK).body(parkingSpot.get());
+        return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findOneParkingSpot(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteParkingSpot(@PathVariable(value = "id") UUID id){
-        Optional<ParkingSpot> parkingSpot = parkingSpotService.findOneParkingSpot(id);
-        if(!parkingSpot.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking spot not found");
-        }
         parkingSpotService.deleteParkingSpot(id);
         return ResponseEntity.status(HttpStatus.OK).body("Parking spot deleted successfully");
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateParkingSpot(@PathVariable(value = "id") UUID id, @RequestBody final ParkingSpotDto parkingSpotDto){
-        Optional<ParkingSpot> parkingSpot = parkingSpotService.findOneParkingSpot(id);
-        if(!parkingSpot.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking spot not found");
-        }
-        ParkingSpot parkingSpotDomain = parkingSpotMapper.convertDtoForEntity(parkingSpotDto);
-        parkingSpotDomain.setId(parkingSpot.get().getId());
-        parkingSpotDomain.setRegistrationDate(parkingSpot.get().getRegistrationDate());
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.updateParkingSpot(parkingSpotDomain));
+        return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.updateParkingSpot(id, parkingSpotDto));
     }
 }

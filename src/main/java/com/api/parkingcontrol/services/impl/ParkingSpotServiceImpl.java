@@ -6,6 +6,7 @@ import com.api.parkingcontrol.mappers.ParkingSpotMapper;
 import com.api.parkingcontrol.repositories.ParkingSpotRepository;
 import com.api.parkingcontrol.services.ParkingSpotService;
 import com.api.parkingcontrol.services.exceptions.DataIntegrityViolationException;
+import com.api.parkingcontrol.services.exceptions.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,8 +62,8 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     }
 
     @Override
-    public Optional<ParkingSpot> findOneParkingSpot(UUID id) {
-        return parkingSpotRepository.findById(id);
+    public ParkingSpot findOneParkingSpot(UUID id) {
+        return parkingSpotRepository.findById(id).orElseThrow(()->new NoSuchElementException("ParkingSpot not Found"));
     }
 
     @Transactional
@@ -72,7 +73,13 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     }
 
     @Override
-    public ParkingSpot updateParkingSpot(final ParkingSpot parkingSpot) {
-        return parkingSpotRepository.save(parkingSpot);
+    public ParkingSpot updateParkingSpot(final UUID id, final ParkingSpotDto parkingSpotDto) {
+        ParkingSpot parkingSpot = findOneParkingSpot(id);
+        ParkingSpot parkingSpotUpdate = mapper.convertDtoForEntity(parkingSpotDto);
+
+        parkingSpotUpdate.setId(id);
+        parkingSpotUpdate.setRegistrationDate(parkingSpot.getRegistrationDate());
+
+        return parkingSpotRepository.save(parkingSpotUpdate);
     }
 }
