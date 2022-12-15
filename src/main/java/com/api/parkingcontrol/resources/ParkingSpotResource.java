@@ -2,12 +2,15 @@ package com.api.parkingcontrol.resources;
 
 import com.api.parkingcontrol.domains.ParkingSpot;
 import com.api.parkingcontrol.dto.ParkingSpotDto;
+import com.api.parkingcontrol.mappers.ParkingSpotMapper;
 import com.api.parkingcontrol.services.ParkingSpotService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +22,7 @@ import java.util.UUID;
 public class ParkingSpotResource {
 
     final ParkingSpotService parkingSpotService;
+    final ParkingSpotMapper parkingSpotMapper;
 
     @PostMapping
     public ResponseEntity<Object> saveParkingSpot(@RequestBody @Valid final ParkingSpotDto parkingSpotDto){
@@ -59,5 +63,18 @@ public class ParkingSpotResource {
         }
         parkingSpotService.deleteParkingSpot(id);
         return ResponseEntity.status(HttpStatus.OK).body("Parking spot deleted successfully");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateParkingSpot(@PathVariable(value = "id") UUID id, @RequestBody final ParkingSpotDto parkingSpotDto){
+        Optional<ParkingSpot> parkingSpot = parkingSpotService.findOneParkingSpot(id);
+        if(!parkingSpot.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking spot not found");
+        }
+        ParkingSpot parkingSpotDomain = parkingSpotMapper.convertDtoForEntity(parkingSpotDto);
+        parkingSpotDomain.setId(parkingSpot.get().getId());
+        parkingSpotDomain.setRegistrationDate(parkingSpot.get().getRegistrationDate());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.updateParkingSpot(parkingSpotDomain));
     }
 }

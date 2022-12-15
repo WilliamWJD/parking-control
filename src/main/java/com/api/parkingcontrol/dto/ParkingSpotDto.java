@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -11,6 +12,8 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @ToString
 public class ParkingSpotDto {
+
+    private UUID id;
 
     @NotBlank
     private String parkingSpotNumber;

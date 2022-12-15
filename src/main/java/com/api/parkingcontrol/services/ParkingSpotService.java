@@ -16,4 +16,6 @@ public interface ParkingSpotService {
     Optional<ParkingSpot> findOneParkingSpot(final UUID id);
     void deleteParkingSpot(final UUID id);
 
+    ParkingSpot updateParkingSpot(final ParkingSpot parkingSpot);
+
 }

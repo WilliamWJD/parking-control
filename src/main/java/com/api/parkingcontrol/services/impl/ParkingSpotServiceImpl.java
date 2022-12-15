@@ -56,4 +56,9 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     public void deleteParkingSpot(UUID id) {
         parkingSpotRepository.deleteById(id);
     }
+
+    @Override
+    public ParkingSpot updateParkingSpot(final ParkingSpot parkingSpot) {
+        return parkingSpotRepository.save(parkingSpot);
+    }
 }
