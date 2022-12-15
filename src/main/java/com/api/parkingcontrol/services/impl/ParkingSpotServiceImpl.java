@@ -6,8 +6,6 @@ import com.api.parkingcontrol.mappers.ParkingSpotMapper;
 import com.api.parkingcontrol.repositories.ParkingSpotRepository;
 import com.api.parkingcontrol.services.ParkingSpotService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -51,5 +49,11 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
     @Override
     public Optional<ParkingSpot> findOneParkingSpot(UUID id) {
         return parkingSpotRepository.findById(id);
+    }
+
+    @Transactional
+    @Override
+    public void deleteParkingSpot(UUID id) {
+        parkingSpotRepository.deleteById(id);
     }
 }

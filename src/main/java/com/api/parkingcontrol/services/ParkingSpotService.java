@@ -14,5 +14,6 @@ public interface ParkingSpotService {
     boolean existsByApartmentAndBlock(final String apartment, String block);
     List<ParkingSpot> findAll();
     Optional<ParkingSpot> findOneParkingSpot(final UUID id);
+    void deleteParkingSpot(final UUID id);
 
 }
